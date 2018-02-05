@@ -2,43 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.mysterygame.dao.UserMapper">
 	<resultMap id="BaseResultMap" type="cn.mysterygame.entity.User">
-		<id column="id" property="id" />
-		<result column="password" property="password" />
-		<result column="username" property="username" />
+		<id column="user_id" property="userId" />
+        <result column="username_" property="username" />
+		<result column="password_" property="password" />
+        <result column="user_status" property="userStatus" />
+        <result column="game_id" property="gameId" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, password, username
+		user_id, username_, password_, user_status, game_id
 	</sql>
-	<select id="selectByUsername" resultMap="BaseResultMap"
-		parameterType="java.lang.String">
+	<select id="selectByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
-		from user
-		where username= #{username}
+		from users
+		where username_= #{username}
 	</select>
-	<insert id="insertSelective" parameterType="cn.mysterygame.entity.User">
-		insert into user
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
-			<if test="password != null">
-				password,
-			</if>
-			<if test="username != null">
-				username,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				#{id},
-			</if>
-			<if test="password != null">
-				#{password},
-			</if>
-			<if test="username != null">
-				#{username},
-			</if>
-		</trim>
-	</insert>
+	<insert id="insertSelective" parameterType="cn.mysterygame.entity.User" >
+    insert into users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="username != null" >
+        username_,
+      </if>
+      <if test="password != null" >
+        password_,
+      </if>
+      <if test="userStatus != null" >
+        user_status,
+      </if>
+      <if test="gameId != null" >
+        game_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="username != null" >
+        #{username},
+      </if>
+      <if test="password != null" >
+        #{password},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus},
+      </if>
+      <if test="gameId != null" >
+        #{gameId},
+      </if>
+    </trim>
+  </insert>
 </mapper>

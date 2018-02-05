@@ -14,7 +14,7 @@ public class UserService {
 	@Autowired
 	private UserMapper userDao;
 	
-	public List<User> selectByUsername(String username) {
+	public User selectByUsername(String username) {
 		return userDao.selectByUsername(username);
 	}
 	

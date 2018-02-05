@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.mysterygame.dao.ScriptMapper">
+	<resultMap id="BaseResultMap" type="cn.mysterygame.entity.Script">
+		<id column="script_id" property="scriptId" />
+        <result column="play_id" property="playId" />
+		<result column="role_name" property="roleName" />
+        <result column="role_intro" property="roleIntro" />
+        <result column="content_" property="content" />
+        <result column="known_clue_position" property="knownCluePosition" />
+        <result column="goal_" property="goal" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		script_id, play_id, role_name, role_intro,
+		content_, known_clue_position, goal_
+	</sql>
+	<insert id="insertSelective" parameterType="cn.mysterygame.entity.Script" >
+    insert into scripts
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="playId != null" >
+        play_id,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="roleIntro != null" >
+        role_intro,
+      </if>
+      <if test="content != null" >
+        content_,
+      </if>
+      <if test="knownCluePosition != null" >
+        known_clue_position,
+      </if>
+      <if test="goal != null" >
+        goal_,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="playId != null" >
+        #{playId},
+      </if>
+      <if test="roleName != null" >
+        #{roleName},
+      </if>
+      <if test="roleIntro != null" >
+        #{roleIntro},
+      </if>
+      <if test="content != null" >
+        #{content},
+      </if>
+      <if test="knownCluePosition != null" >
+        #{knownCluePosition},
+      </if>
+      <if test="goal != null" >
+        #{goal},
+      </if>
+    </trim>
+  </insert>
+</mapper>

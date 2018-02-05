@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.mysterygame.dao.ClueMapper">
+	<resultMap id="BaseResultMap" type="cn.mysterygame.entity.Clue">
+		<id column="clue_id" property="clueId" />
+        <result column="play_id" property="playId" />
+		<result column="clue_position" property="cluePosition" />
+        <result column="upper_clue_id" property="upperClueId" />
+        <result column="content_" property="content" />
+        <result column="clue_cost" property="clueCost" />
+        <result column="pic_url" property="picUrl" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		clue_id, play_id, clue_position, upper_clue_id,
+		content_, clue_cost, pic_url
+	</sql>
+	<insert id="insertSelective" parameterType="cn.mysterygame.entity.Clue" >
+    insert into clues
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="playId != null" >
+        play_id,
+      </if>
+      <if test="cluePosition != null" >
+        clue_position,
+      </if>
+      <if test="upperClueId != null" >
+        upper_clue_id,
+      </if>
+      <if test="content != null" >
+        content_,
+      </if>
+      <if test="clueCost != null" >
+        clue_cost,
+      </if>
+      <if test="picUrl != null" >
+        pic_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="playId != null" >
+        #{playId},
+      </if>
+      <if test="cluePosition != null" >
+        #{cluePosition},
+      </if>
+      <if test="upperClueId != null" >
+        #{upperClueId},
+      </if>
+      <if test="content != null" >
+        #{content},
+      </if>
+      <if test="clueCost != null" >
+        #{clueCost},
+      </if>
+      <if test="picUrl != null" >
+        #{picUrl},
+      </if>
+    </trim>
+  </insert>
+</mapper>
