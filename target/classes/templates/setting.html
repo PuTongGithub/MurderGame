@@ -3,9 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Setting</title>
-<link rel="stylesheet" href="css/bootstrap.css">
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -16,6 +16,9 @@
             </li>
             <li>
                 <a href="#script" data-toggle="tab">script</a>
+            </li>
+            <li>
+                <a href="#position" data-toggle="tab">position</a>
             </li>
             <li>
                 <a href="#clue" data-toggle="tab">clue</a>
@@ -65,7 +68,7 @@
                         <label>真相：</label> 
                         <textarea name="theTruth" class="form-control" rows="8"></textarea>
                     </div>
-                    <button id="playSubmitButton" class="btn btn-primary" type="submit">提交</button>
+                    <button id="playSubmitButton" class="btn btn-primary" type="button">提交</button>
 				</form>
             </div>
             <div class="tab-pane fade " id="script">
@@ -87,14 +90,31 @@
                         <textarea name="content" class="form-control" rows="15"></textarea>
                     </div>
                     <div class="form-group">
-                        <label>已知线索所在位置：</label> 
+                        <label>已知线索位置id（‘/’分割）：</label> 
                         <input type="text" class="form-control" name="knownCluePosition">
                     </div>
                     <div class="form-group">
                         <label>游戏目标：</label> 
                         <textarea name="goal" class="form-control" rows="5"></textarea>
                     </div>
-                    <button id="scriptSubmitButton" class="btn btn-primary" type="submit">提交</button>
+                    <button id="scriptSubmitButton" class="btn btn-primary" type="button">提交</button>
+                </form>
+            </div>
+            <div class="tab-pane fade " id="position">
+                <form id="positionForm">
+                    <div class="form-group">
+                        <label>所属剧id：</label> 
+                        <input type="text" class="form-control" name="playId">
+                    </div>
+                    <div class="form-group">
+                        <label>位置名称：</label> 
+                        <input type="text" class="form-control" name="content">
+                    </div>
+                    <div class="form-group">
+                        <label>所属搜证轮次：</label> 
+                        <input type="text" class="form-control" name="clueRound">
+                    </div>
+                    <button id="positionSubmitButton" class="btn btn-primary" type="button">提交</button>
                 </form>
             </div>
             <div class="tab-pane fade " id="clue">
@@ -104,8 +124,8 @@
                         <input type="text" class="form-control" name="playId">
                     </div>
                     <div class="form-group">
-                        <label>线索位置：</label> 
-                        <input type="text" class="form-control" name="cluePosition">
+                        <label>线索位置id：</label> 
+                        <input type="text" class="form-control" name="positionId">
                     </div>
                     <div class="form-group">
                         <label>上层线索id：</label> 
@@ -123,7 +143,7 @@
                         <label>获取线索费用：</label> 
                         <input type="text" class="form-control" name="clueCost">
                     </div>
-                    <button id="clueSubmitButton" class="btn btn-primary" type="submit">提交</button>
+                    <button id="clueSubmitButton" class="btn btn-primary" type="button">提交</button>
                 </form>
             </div>
         </div>    
@@ -139,7 +159,6 @@
                 type:'POST',
                 cache : false,
                 data : $('#playForm').serialize(),
-                dataType : 'json',
                 error:function(){
                     alert("network wrong!");
                 },
@@ -154,7 +173,20 @@
                 type:'POST',
                 cache : false,
                 data : $('#scriptForm').serialize(),
-                dataType : 'json',
+                error:function(){
+                    alert("network wrong!");
+                },
+                success:function(result){
+                    alert(result);
+                }
+            });
+        })
+        $("#positionSubmitButton").click(function(){
+            $.ajax({
+                url:'setting/addPosition',
+                type:'POST',
+                cache : false,
+                data : $('#positionForm').serialize(),
                 error:function(){
                     alert("network wrong!");
                 },
@@ -169,9 +201,8 @@
                 type:'POST',
                 cache : false,
                 data : $('#clueForm').serialize(),
-                dataType : 'json',
                 error:function(){
-                    $("#alertDiv").html("network wrong!");
+                    alert("network wrong!");
                 },
                 success:function(result){
                     alert(result);

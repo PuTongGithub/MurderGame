@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.mysterygame.dao.GameClueMapper">
+	<resultMap id="BaseResultMap" type="cn.mysterygame.entity.GameClue">
+		<id column="gameClueId" property="game_clue_id" />
+        <result column="gameId" property="game_id" />
+		<result column="clueId" property="clue_id" />
+        <result column="positionId" property="position_id" />
+        <result column="userId" property="user_id" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		game_clue_id, game_id, clue_id, position_id, user_id
+	</sql>
+	<insert id="insertSelective" parameterType="cn.mysterygame.entity.GameClue" >
+    insert into game_clue
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="gameId != null" >
+        game_id,
+      </if>
+      <if test="clueId != null" >
+        clue_id,
+      </if>
+      <if test="positionId != null" >
+        position_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="gameId != null" >
+        #{gameId},
+      </if>
+      <if test="clueId != null" >
+        #{clueId},
+      </if>
+      <if test="positionId != null" >
+        #{positionId},
+      </if>
+      <if test="userId != null" >
+        #{userId},
+      </if>
+    </trim>
+  </insert>
+</mapper>

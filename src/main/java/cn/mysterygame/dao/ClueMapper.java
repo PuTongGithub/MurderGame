@@ -6,4 +6,6 @@ import cn.mysterygame.entity.Clue;
 
 public interface ClueMapper {
 	public void insertSelective(Clue clue);
+	
+	public List<Clue> selectByPlayId(int playId);
 }

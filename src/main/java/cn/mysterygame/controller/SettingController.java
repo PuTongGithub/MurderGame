@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.mysterygame.entity.Clue;
 import cn.mysterygame.entity.Play;
+import cn.mysterygame.entity.Position;
 import cn.mysterygame.entity.Script;
 import cn.mysterygame.service.ClueService;
 import cn.mysterygame.service.PlayService;
+import cn.mysterygame.service.PositionService;
 import cn.mysterygame.service.ScriptService;
 
 @RestController
@@ -20,6 +22,8 @@ public class SettingController {
 	PlayService playService;
 	@Autowired
 	ScriptService scriptService;
+	@Autowired
+	PositionService positionService;
 	@Autowired
 	ClueService clueService;
 	
@@ -32,6 +36,12 @@ public class SettingController {
 	@PostMapping("/addScript")
 	public String addScript(Script script) {
 		scriptService.insert(script);
+		return "success";
+	}
+	
+	@PostMapping("/addPosition")
+	public String addPosition(Position position) {
+		positionService.insert(position);
 		return "success";
 	}
 	

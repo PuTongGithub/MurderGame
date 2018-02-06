@@ -4,14 +4,14 @@
 	<resultMap id="BaseResultMap" type="cn.mysterygame.entity.Clue">
 		<id column="clue_id" property="clueId" />
         <result column="play_id" property="playId" />
-		<result column="clue_position" property="cluePosition" />
+		<result column="position_id" property="positionId" />
         <result column="upper_clue_id" property="upperClueId" />
         <result column="content_" property="content" />
         <result column="clue_cost" property="clueCost" />
         <result column="pic_url" property="picUrl" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		clue_id, play_id, clue_position, upper_clue_id,
+		clue_id, play_id, position_id, upper_clue_id,
 		content_, clue_cost, pic_url
 	</sql>
 	<insert id="insertSelective" parameterType="cn.mysterygame.entity.Clue" >
@@ -20,8 +20,8 @@
       <if test="playId != null" >
         play_id,
       </if>
-      <if test="cluePosition != null" >
-        clue_position,
+      <if test="positionId != null" >
+        position_id,
       </if>
       <if test="upperClueId != null" >
         upper_clue_id,
@@ -40,8 +40,8 @@
       <if test="playId != null" >
         #{playId},
       </if>
-      <if test="cluePosition != null" >
-        #{cluePosition},
+      <if test="positionId != null" >
+        #{positionId},
       </if>
       <if test="upperClueId != null" >
         #{upperClueId},
@@ -57,4 +57,10 @@
       </if>
     </trim>
   </insert>
+  <select id="selectByPlayId" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from clues
+    where play_id = #{playId}
+  </select>
 </mapper>

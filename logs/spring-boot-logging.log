@@ -1,0 +1,6 @@
+2018-02-05 16:32:55.417  INFO 15024 --- [restartedMain] cn.mysterygame.Application               : Starting Application on Pt-Desktop with PID 15024 (D:\code\workspace\game\target\classes started by hasee in D:\code\workspace\game)
+2018-02-05 16:32:55.417  INFO 15024 --- [restartedMain] cn.mysterygame.Application               : No active profile set, falling back to default profiles: default
+2018-02-05 16:32:55.586  INFO 15024 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2018-02-05 16:32:55.587  INFO 15024 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.27
+2018-02-05 16:32:55.597  INFO 15024 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2018-02-05 16:32:55.765  INFO 15024 --- [restartedMain] cn.mysterygame.Application               : Started Application in 0.375 seconds (JVM running for 4040.611)

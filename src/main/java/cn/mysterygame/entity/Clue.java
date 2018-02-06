@@ -3,7 +3,7 @@ package cn.mysterygame.entity;
 public class Clue {
 	private int clueId;
 	private int playId;
-	private String cluePosition;
+	private int positionId;
 	private int upperClueId;
 	private String content;
 	private int clueCost;
@@ -25,12 +25,12 @@ public class Clue {
         this.playId = playId;
     }
     
-    public String getCluePosition() {
-        return cluePosition;
+    public int getPositionId() {
+        return positionId;
     }
 
-    public void setCluePosition(String clue_position) {
-        this.cluePosition = clue_position;
+    public void setPositionId(int positionId) {
+        this.positionId = positionId;
     }
     
     public int getUpperClueId() {

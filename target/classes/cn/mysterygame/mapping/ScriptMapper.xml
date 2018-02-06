@@ -57,4 +57,10 @@
       </if>
     </trim>
   </insert>
+  <select id="selectByPlayId" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from scripts
+    where play_id = #{playId}
+  </select>
 </mapper>

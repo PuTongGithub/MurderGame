@@ -47,5 +47,17 @@
         #{gameId},
       </if>
     </trim>
-  </insert>
+    </insert>
+	<update id="updateByUserId" parameterType="cn.mysterygame.entity.User">
+		update users
+		<set>
+			<if test="userStatus != null">
+				user_status = #{userStatus},
+			</if>
+			<if test="gameId != null">
+				game_id = #{gameId},
+			</if>
+		</set>
+		where user_id = #{userId}
+	</update>
 </mapper>

@@ -1,5 +1,8 @@
 package cn.mysterygame.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Play {
 	private int playId;
 	private String playName;

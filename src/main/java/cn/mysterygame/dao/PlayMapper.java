@@ -6,4 +6,6 @@ import cn.mysterygame.entity.Play;
 
 public interface PlayMapper {
 	public void insertSelective(Play play);
+	
+	public List<Play> selectAll();
 }
