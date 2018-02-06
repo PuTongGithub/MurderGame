@@ -69,4 +69,10 @@
     <include refid="Base_Column_List" />
     from plays
   </select>
+  <select id="selectByPlayId" resultMap="BaseResultMap" parameterType="int">
+    select
+    <include refid="Base_Column_List" />
+    from plays
+    where play_id = #{playId}
+  </select>
 </mapper>

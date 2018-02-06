@@ -49,7 +49,6 @@ public class StartRoomController {
 		
 		map.put("success", true);
 		map.put("message", "创建房间成功！");
-		//map.put("url", "host.html")
 		return map;
 	}
 }

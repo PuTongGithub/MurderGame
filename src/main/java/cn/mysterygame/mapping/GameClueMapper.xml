@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.mysterygame.dao.GameClueMapper">
 	<resultMap id="BaseResultMap" type="cn.mysterygame.entity.GameClue">
-		<id column="gameClueId" property="game_clue_id" />
-        <result column="gameId" property="game_id" />
-		<result column="clueId" property="clue_id" />
-        <result column="positionId" property="position_id" />
-        <result column="userId" property="user_id" />
+		<id property="gameClueId" column="game_clue_id" />
+        <result property="gameId" column="game_id" />
+		<result property="clueId" column="clue_id" />
+        <result property="positionId" column="position_id" />
+        <result property="userId" column="user_id" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		game_clue_id, game_id, clue_id, position_id, user_id

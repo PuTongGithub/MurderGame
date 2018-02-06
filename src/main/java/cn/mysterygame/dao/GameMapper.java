@@ -8,4 +8,8 @@ public interface GameMapper {
 	public Integer selectGameStatusById(int gameId);
 	
 	public Integer selectGameId(Game game);
+	
+	public Game selectByGameId(int gameId);
+	
+	public void updateByPrimaryKeySelective(Game game);
 }

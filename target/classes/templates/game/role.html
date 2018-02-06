@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Mystery Murder Game</title>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style type="text/css">
+.title-margin {
+    margin-top:60px;
+    margin-bottom:40px;
+}
+.list-style{
+    width:100%;
+    margin-bottom:60px;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center title-margin"><span id="playNameSpan">剧名</span></h1>
+        <div class="page-header">
+            <h1><small>剧情简介</small></h1>
+        </div>
+        <div id="playIntroDiv"></div>
+        <div class="page-header">
+            <h1><small>角色选择</small></h1>
+        </div>
+		<div id="listGroupDiv" class="list-group list-style"></div>
+	</div>
+	
+	<div class="modal fade" id="myModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">角色选择</h4>
+				</div>
+				<div class="modal-body" id="modalBodyDiv"></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-primary" id="confirmButton">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+	getPlayInfo();
+	getRoleInfo();
+    getStatusInfo();
+
+	function getPlayInfo(){
+	    $.ajax({
+	        url:'role/getPlay',
+	        type:'POST',
+	        cache : false,
+	        dataType : 'json',
+	        error:function(){
+	            alert("network wrong!");
+	        },
+	        success:function(result){
+	            $("#playNameSpan").html(result.playName);
+	            $("#playIntroDiv").html(result.playIntro);
+	        }
+	    });
+	}
+
+	function getRoleInfo(){
+	    $.ajax({
+	        url:'role/getRoles',
+	        type:'POST',
+	        cache : false,
+	        dataType : 'json',
+	        async: false,
+	        error:function(){
+	            alert("network wrong!");
+	        },
+	        success:function(result){
+	            for(var i=0; i<result.length; i++){
+	                $("#listGroupDiv").append(
+	                        '<a class="list-group-item" data-id="'+result[i].scriptId+
+	                        '" data-name="'+result[i].roleName+'">'+
+	                        '<h4><strong>'+result[i].roleName+'</strong></h4>'+
+	                        '<div>'+result[i].roleIntro+'</div>'+
+	                        '</a>');
+	            }
+	        }
+	    });
+	}
+    function getStatusInfo(){
+        $.ajax({
+            url:'role/getStatus',
+            type:'POST',
+            cache : false,
+            dataType : 'json',
+            error:function(){
+                alert("network wrong!");
+            },
+            success:function(result){
+                for(var i=0; i<result.length; i++){
+                	if(result[i].userId != 0){
+                		var obj = '[data-id="'+result[i].scriptId+'"]';
+                		var newClass = $(obj).attr("class")+" disabled";
+                        $(obj).attr("class", newClass);
+                	}
+                }
+            }
+        });
+    }
+    
+    var scriptId;
+    var roleName;
+    
+    $(function(){
+        $('[class="list-group-item"]').click(function(){
+        	scriptId = $(this).attr("data-id");
+        	roleName = $(this).attr("data-name");
+        	$('#modalBodyDiv').html("本局游戏中你将扮演："+roleName);
+        	$('#myModal').modal("show");
+        });
+        
+        $('#confirmButton').click(function(){
+            $('#myModal').modal("hide");
+        	var dataJson = {"scriptId":scriptId};
+        	$.ajax({
+                url:'role/confirm',
+                type:'POST',
+                cache : false,
+                data : dataJson,
+                dataType : 'json',
+                error:function(){
+                    alert("network wrong!");
+                },
+                success:function(result){
+                    if(result.success){
+                        window.location.href = "index.html";
+                    }
+                    else{
+                        $('#modalBodyDiv').html("该角色已被选！");
+                        $('#myModal').modal("show");
+                    	getStatusInfo();
+                    }
+                }
+            });
+        })
+    })
+    </script>
+</body>
+</html>

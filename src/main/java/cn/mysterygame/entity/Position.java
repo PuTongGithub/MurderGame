@@ -4,24 +4,24 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Position {
-	private int positionId;
-	private int playId;
+	private Integer positionId;
+	private Integer playId;
 	private String content;
-	private int clueRound;
+	private Integer clueRound;
     
-    public int getPositionId() {
+    public Integer getPositionId() {
         return positionId;
     }
 
-    public void setPositionId(int positionId) {
+    public void setPositionId(Integer positionId) {
         this.positionId = positionId;
     }
     
-    public int getPlayId() {
+    public Integer getPlayId() {
         return playId;
     }
 
-    public void setPlayId(int playId) {
+    public void setPlayId(Integer playId) {
         this.playId = playId;
     }
     
@@ -33,11 +33,11 @@ public class Position {
         this.content = content;
     }
     
-    public int getClueRound() {
+    public Integer getClueRound() {
         return clueRound;
     }
 
-    public void setClueRoundt(int clueRound) {
+    public void setClueRoundt(Integer clueRound) {
         this.clueRound = clueRound;
     }
 }

@@ -4,27 +4,27 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Script {
-	private int scriptId;
-	private int playId;
+	private Integer scriptId;
+	private Integer playId;
 	private String roleName;
 	private String roleIntro;
 	private String content;
 	private String knownCluePosition;
 	private String goal;
 	
-	public int getScriptId() {
+	public Integer getScriptId() {
         return scriptId;
     }
 
-    public void setScriptId(int scriptId) {
+    public void setScriptId(Integer scriptId) {
         this.scriptId = scriptId;
     }
 	
-	public int getPlayId() {
+	public Integer getPlayId() {
         return playId;
     }
 
-    public void setPlayId(int playId) {
+    public void setPlayId(Integer playId) {
         this.playId = playId;
     }
     

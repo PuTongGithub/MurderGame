@@ -68,8 +68,7 @@
                 },
                 success:function(result){
                     if(result.success){
-                    	alert("found!");
-                        //window.location.href = result.url;
+                        window.location.href = result.url;
                     }
                     else{
                         $('#formErrorAlert').css("display", "block");

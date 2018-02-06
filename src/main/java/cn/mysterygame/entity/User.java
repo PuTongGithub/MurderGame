@@ -4,17 +4,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
-	private int userId;
+	private Integer userId;
 	private String username;
 	private String password;
-	private int userStatus;
-	private int gameId;
+	private Integer userStatus;
+	private Integer gameId;
 	
-	public int getUserId() {
+	public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
     
@@ -34,19 +34,19 @@ public class User {
         this.password = password;
     }
 	
-	public int getUserStatus() {
+	public Integer getUserStatus() {
         return userStatus;
     }
 
-    public void setUserStatus(int userStatus) {
+    public void setUserStatus(Integer userStatus) {
         this.userStatus = userStatus;
     }
 	
-	public int getGameId() {
+	public Integer getGameId() {
         return gameId;
     }
 
-    public void setGameId(int gameId) {
+    public void setGameId(Integer gameId) {
         this.gameId = gameId;
     }
 }

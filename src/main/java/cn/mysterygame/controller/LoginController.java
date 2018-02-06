@@ -44,10 +44,10 @@ public class LoginController {
 				map.put("url", "game/lobby.html");
 			}
 			else if(status == 1){
-				//map.put("url","game/index.html");
+				map.put("url","game/index.html");
 			}
 			else {
-				//map.put("url","game/host.html");
+				map.put("url","game/host.html");
 			}
 		} else {
 			map.put("success", false);

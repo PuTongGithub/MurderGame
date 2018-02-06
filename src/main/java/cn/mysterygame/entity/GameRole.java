@@ -4,49 +4,49 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GameRole {
-	private int gameRoleId;
-	private int gameId;
-	private int scriptId;
-	private int userId;
-	private int clueCoins;
+	private Integer gameRoleId;
+	private Integer gameId;
+	private Integer scriptId;
+	private Integer userId;
+	private Integer clueCoins;
     
-    public int getGameRoleId() {
+    public Integer getGameRoleId() {
         return gameRoleId;
     }
 
-    public void setGameRoleId(int gameRoleId) {
+    public void setGameRoleId(Integer gameRoleId) {
         this.gameRoleId = gameRoleId;
     }
 	
-	public int getGameId() {
+	public Integer getGameId() {
         return gameId;
     }
 
-    public void setGameId(int gameId) {
+    public void setGameId(Integer gameId) {
         this.gameId = gameId;
     }
     
-    public int getScriptId() {
+    public Integer getScriptId() {
         return scriptId;
     }
 
-    public void setScriptId(int scriptId) {
+    public void setScriptId(Integer scriptId) {
         this.scriptId = scriptId;
     }
     
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
     
-    public int getClueCoins() {
+    public Integer getClueCoins() {
         return clueCoins;
     }
 
-    public void setClueCoins(int clueCoins) {
+    public void setClueCoins(Integer clueCoins) {
         this.clueCoins = clueCoins;
     }
 }

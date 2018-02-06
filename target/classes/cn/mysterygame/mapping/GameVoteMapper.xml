@@ -1,44 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.mysterygame.dao.GameClueMapper">
-	<resultMap id="BaseResultMap" type="cn.mysterygame.entity.GameClue">
-		<id property="gameClueId" column="game_clue_id" />
+<mapper namespace="cn.mysterygame.dao.GameVoteMapper">
+	<resultMap id="BaseResultMap" type="cn.mysterygame.entity.GameVote">
+		<id property="gameVoteId" column="game_vote_id" />
         <result property="gameId" column="game_id" />
-		<result property="clueId" column="clue_id" />
-        <result property="positionId" column="position_id" />
         <result property="userId" column="user_id" />
+		<result property="voteUserId" column="vote_user_id" />
+        <result property="voteRound" column="vote_round" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		game_clue_id, game_id, clue_id, position_id, user_id
+		game_vote_id, game_id, user_id, vote_user_id, vote_round
 	</sql>
-	<insert id="insertSelective" parameterType="cn.mysterygame.entity.GameClue" >
-    insert into game_clue
+	<insert id="insertSelective" parameterType="cn.mysterygame.entity.GameVote" >
+    insert into game_vote
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="gameId != null" >
         game_id,
       </if>
-      <if test="clueId != null" >
-        clue_id,
-      </if>
-      <if test="positionId != null" >
-        position_id,
-      </if>
       <if test="userId != null" >
         user_id,
+      </if>
+      <if test="voteRound != null" >
+        vote_round,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="gameId != null" >
         #{gameId},
       </if>
-      <if test="clueId != null" >
-        #{clueId},
-      </if>
-      <if test="positionId != null" >
-        #{positionId},
-      </if>
       <if test="userId != null" >
         #{userId},
+      </if>
+      <if test="voteRound != null" >
+        #{voteRound},
       </if>
     </trim>
   </insert>

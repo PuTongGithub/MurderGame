@@ -30,4 +30,14 @@ public class PagesController {
 	public String startRoom() {
 		return "game/startRoom";
 	}
+	
+	@GetMapping(value = { "/game/host.html" })
+	public String host() {
+		return "game/host";
+	}
+	
+	@GetMapping(value = { "/game/role.html" })
+	public String role() {
+		return "game/role";
+	}
 }

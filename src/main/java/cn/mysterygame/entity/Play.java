@@ -4,20 +4,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Play {
-	private int playId;
+	private Integer playId;
 	private String playName;
 	private String playIntro;
-	private int playerNumberMin;
-	private int playerNumberMax;
-	private int playType;
+	private Integer playerNumberMin;
+	private Integer playerNumberMax;
+	private Integer playType;
 	private String hostGuide;
 	private String theTruth;
 
-	public int getPlayId() {
+	public Integer getPlayId() {
         return playId;
     }
 
-    public void setPlayId(int playId) {
+    public void setPlayId(Integer playId) {
         this.playId = playId;
     }
     
@@ -37,27 +37,27 @@ public class Play {
         this.playIntro = playIntro;
     }
     
-    public int getPlayerNumberMin() {
+    public Integer getPlayerNumberMin() {
         return playerNumberMin;
     }
 
-    public void setPlayerNumberMin(int playerNumberMin) {
+    public void setPlayerNumberMin(Integer playerNumberMin) {
         this.playerNumberMin = playerNumberMin;
     }
     
-    public int getPlayerNumberMax() {
+    public Integer getPlayerNumberMax() {
         return playerNumberMax;
     }
 
-    public void setPlayerNumberMax(int playerNumberMax) {
+    public void setPlayerNumberMax(Integer playerNumberMax) {
         this.playerNumberMax = playerNumberMax;
     }
     
-    public int getPlayType() {
+    public Integer getPlayType() {
         return playType;
     }
 
-    public void setPlayType(int playType) {
+    public void setPlayType(Integer playType) {
         this.playType = playType;
     }
     

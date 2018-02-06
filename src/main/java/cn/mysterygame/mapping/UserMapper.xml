@@ -17,6 +17,12 @@
 		from users
 		where username_= #{username}
 	</select>
+	<select id="selectByUserId" resultMap="BaseResultMap" parameterType="int">
+        select
+        <include refid="Base_Column_List" />
+        from users
+        where user_id= #{userId}
+    </select>
 	<insert id="insertSelective" parameterType="cn.mysterygame.entity.User" >
     insert into users
     <trim prefix="(" suffix=")" suffixOverrides="," >

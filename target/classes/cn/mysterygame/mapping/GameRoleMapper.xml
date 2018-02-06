@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.mysterygame.dao.GameRoleMapper">
 	<resultMap id="BaseResultMap" type="cn.mysterygame.entity.GameRole">
-		<id column="gameRoleId" property="game_role_id" />
-        <result column="gameId" property="game_id" />
-		<result column="scriptId" property="script_id" />
-        <result column="userId" property="user_id" />
-        <result column="clueCoins" property="clue_coins" />
+		<id property="gameRoleId" column="game_role_id" />
+        <result property="gameId" column="game_id" />
+		<result property="scriptId" column="script_id" />
+        <result property="userId" column="user_id" />
+        <result property="clueCoins" column="clue_coins" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		game_role_id, game_id, script_id, user_id, clue_coins
@@ -49,4 +49,29 @@
     where game_id = #{0}
     and user_id = #{1}
   </select>
+  <select id="selectByGameScript" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from game_role
+    where game_id = #{0}
+    and script_id = #{1}
+  </select>
+  <select id="selectByGameId" resultMap="BaseResultMap" parameterType="int">
+    select
+    <include refid="Base_Column_List" />
+    from game_role
+    where game_id = #{gameId}
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.mysterygame.entity.GameRole" >
+    update game_role
+    <set>
+      <if test="userId != null" >
+        user_id = #{userId},
+      </if>
+      <if test="clueCoins != null" >
+        clue_coins = #{clueCoins},
+      </if>
+    </set>
+    where game_role_id = #{gameRoleId}
+  </update>
 </mapper>

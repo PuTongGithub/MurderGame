@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Mystery Murder Game</title>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style type="text/css">
+.row-margin{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.container-margin{
+    margin-top:20px;
+    margin-bottom:60px;
+}
+.button-style{
+    width:100%;
+}
+</style>
+</head>
+<body>
+    <div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" >
+            <li class="active">
+                <a href="#playInfo" data-toggle="tab">剧本信息</a>
+            </li>
+            <li>
+                <a href="#gameInfo" data-toggle="tab">游戏信息</a>
+            </li>
+            <li>
+                <a href="#statusContrl" data-toggle="tab">阶段控制</a>
+            </li>
+            <li>
+                <a href="#handOut" data-toggle="tab">线索分发</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="playInfo">
+                <div class="container container-margin">
+                    <h3><strong>剧名：<span id="playNameSpan"></span></strong></h3>
+                    <h3><strong>玩家人数：<span id="playerNumberSpan"></span></strong></h3>
+                    <h3><strong>游戏类型：<span id="playTypeSpan"></span></strong></h3>
+                    <div class="page-header">
+                        <h1><small>剧情简介</small></h1>
+                    </div>
+                    <div id="playIntroDiv"></div>
+                    <div class="page-header">
+                        <h1><small>组织者指南</small></h1>
+                    </div>
+                    <div id="hostGuideDiv"></div>
+                    <div class="page-header">
+                        <h1><small>案件真相</small></h1>
+                    </div>
+                    <div id="theTruthDiv"></div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="gameInfo">
+                <div class="container container-margin">
+                        <h3><strong>游戏房间ID：<span id="gameIdSpan"></span></strong></h3>
+                        <h3><strong>当前游戏状态：<span id="gameStatusSpan"></span></strong></h3>
+                        <h3><strong>搜证轮次：<span id="clueRoundSpan"></span></strong></h3>
+                        <h3><strong>投票轮次：<span id="voteRoundSpan"></span></strong></h3>
+                        <h3><strong>当前线索获取类型：<span id="clueTypeSpan"></span></strong></h3>
+                        <h3><strong>游戏开始时间：</strong></h3>
+                        <h3><strong><span id="openTimeSpan"></span></strong></h3>
+                </div>
+            </div>
+            <div class="tab-pane fade " id="statusContrl">
+				<div class="container" style="margin-bottom:60px;">
+                    <div id="formErrorAlert" class="alert alert-warning" style="display:none;"></div>
+					<div class="page-header">
+						<h1><small>搜证阶段</small></h1>
+					</div>
+					<form id="clueForm">
+						<div class="form-group">
+							<label>设置线索币分发数目：</label>
+                            <input type="text" class="form-control" name="clueCoins">
+						</div>
+						<div class="form-group">
+                            <label>设置搜证轮次：</label>
+                            <select class="form-control" name="clueRound">
+								<option value="1">第一轮</option>
+								<option value="2">第二轮</option>
+								<option value="3">第三轮</option>
+								<option value="4">第四轮</option>
+								<option value="5">第五轮</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>设置轮次线索获取类型：</label><br />
+							<label class="radio-inline">
+								<input type="radio" name="clueType" value="1" checked="checked">不可重复获取线索
+							</label> 
+							<label class="radio-inline">
+							    <input type="radio" name="clueType" value="2">可重复获取线索
+							</label>
+						</div>
+						<button id="clueFormButton" class="btn btn-primary button-style"
+						type="button">开始新的一轮搜证</button>
+					</form>
+                    <div class="page-header">
+                        <h1><small>投票阶段</small></h1>
+                    </div>
+                    <form id="voteForm">
+                        <div class="form-group">
+                            <label>设置投票轮次：</label>
+                            <select class="form-control" name="voteRound">
+                                <option value="1">第一轮</option>
+                                <option value="2">第二轮</option>
+                                <option value="3">第三轮</option>
+                                <option value="4">第四轮</option>
+                                <option value="5">第五轮</option>
+                            </select>
+                        </div>
+                        <button id="voteFormButton" class="btn btn-primary button-style"
+                        type="button">开始新的一轮投票</button>
+                    </form>
+                    <div class="page-header">
+                        <h1><small>结束游戏</small></h1>
+                    </div>
+                    <button id="endButton" class="btn btn-danger button-style row-margin"
+                        type="button">游戏结束 发放真相</button>
+                    <button id="closeButton" class="btn btn-danger button-style row-margin" 
+                        type="button">关闭房间</button>
+				</div>
+			</div>
+            <div class="tab-pane fade " id="handOut">c</div>
+        </div>    
+
+    </div>
+	<script>
+    getPlayInfo();
+    
+		function getPlayInfo() {
+			$.ajax({
+                url : 'host/getPlay',
+                type : 'POST',
+                cache : false,
+                dataType : 'json',
+                error : function() {
+                    alert("network wrong!");
+                },
+                success : function(result) {
+                    $("#playNameSpan").html(result.playName);
+                    $("#playerNumberSpan").html(result.playerNumberMax);
+                    var type = result.playType;
+                    var typeName = "封闭";
+                    if(type == 1) typeName = "半封闭";
+                    if(type == 2) typeName = "半开放";
+                    if(type == 3) typeName = "开放";
+                    $("#playTypeSpan").html(typeName);
+                    $("#playIntroDiv").html(result.playIntro);
+                    $("#hostGuideDiv").html(result.hostGuide);
+                    $("#theTruthDiv").html(result.theTruth);
+                }
+            });
+		}
+
+		$(function() {
+			$("a[href='#gameInfo']").click(function() {
+				$.ajax({
+	                url : 'host/getGame',
+	                type : 'POST',
+	                cache : false,
+	                dataType : 'json',
+	                error : function() {
+	                    alert("network wrong!");
+	                },
+	                success : function(result) {
+	                    $("#gameIdSpan").html(result.gameId);
+	                    var status = result.gameStatus;
+	                    var statusName = "关闭";
+	                    if(status == 1) statusName = "等待";
+	                    if(status == 2) statusName = "角色选择阶段";
+	                    if(status == 3) statusName = "初始阶段";
+	                    if(status == 4) statusName = "搜证阶段";
+	                    if(status == 5) statusName = "投票阶段";
+	                    if(status == 6) statusName = "结束";
+	                    $("#gameStatusSpan").html(statusName);
+	                    $("#clueRoundSpan").html(result.clueRound);
+	                    $("#voteRoundSpan").html(result.voteRound);
+	                    var type = result.clueType;
+	                    var typeName = "被分发";
+	                    if(type == 1) typeName = "不重复";
+	                    if(type == 2) typeName = "可重复";
+	                    $("#clueTypeSpan").html(typeName);
+	                    var time = result.openTime;
+	                    var date = new Date(time);
+	                    $("#openTimeSpan").html(date.toLocaleString());
+	                }
+	            });
+			});
+			 
+			$("#clueFormButton").click(function(){
+				if($("[name='clueCoins']").val() == ""){
+		            $('#formErrorAlert').css("display", "block");
+		            $('#formErrorAlert').html("线索币不可为空！");
+				}
+				else{
+					$.ajax({
+		                url : 'host/clueStart',
+		                type : 'POST',
+		                cache : false,
+		                data : $('#clueForm').serialize(),
+		                dataType : 'json',
+		                error : function() {
+		                    $('#formErrorAlert').css("display", "block");
+		                    $('#formErrorAlert').html("用户信息提交异常！");
+		                },
+		                success : function(result) {
+                            $('#formErrorAlert').css("display", "none");
+                            alert(result.message);
+		                }
+		            });
+				}
+			})
+			
+			$("#voteFormButton").click(function(){
+	            $.ajax({
+					url : 'host/voteStart',
+					type : 'POST',
+					cache : false,
+					data : $('#voteForm').serialize(),
+					dataType : 'json',
+					error : function() {
+						$('#formErrorAlert').css("display", "block");
+						$('#formErrorAlert').html("用户信息提交异常！");
+					},
+					success : function(result) {
+						$('#formErrorAlert').css("display", "none");
+						alert(result.message);
+					}
+				});
+			})
+
+			$("#endButton").click(function() {
+				$.ajax({
+					url : 'host/end',
+					type : 'POST',
+					cache : false,
+					dataType : 'json',
+					error : function() {
+						alert("用户信息提交异常！");
+					},
+					success : function(result) {
+						alert(result.message);
+					}
+				});
+			})
+			
+			$("#closeButton").click(function() {
+                $.ajax({
+                    url : 'host/close',
+                    type : 'POST',
+                    cache : false,
+                    dataType : 'json',
+                    error : function() {
+                        alert("用户信息提交异常！");
+                    },
+                    success : function(result) {
+                        alert(result.message);
+                        window.location.href = "lobby.html";
+                    }
+                });
+            })
+		})
+	</script>
+</body>
+</html>

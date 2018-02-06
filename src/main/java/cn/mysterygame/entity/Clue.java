@@ -1,43 +1,43 @@
 package cn.mysterygame.entity;
 
 public class Clue {
-	private int clueId;
-	private int playId;
-	private int positionId;
-	private int upperClueId;
+	private Integer clueId;
+	private Integer playId;
+	private Integer positionId;
+	private Integer upperClueId;
 	private String content;
-	private int clueCost;
+	private Integer clueCost;
 	private String picUrl;
 	
-	public int getClueId() {
+	public Integer getClueId() {
         return clueId;
     }
 
-    public void setClueId(int clueId) {
+    public void setClueId(Integer clueId) {
         this.clueId = clueId;
     }
     
-    public int getPlayId() {
+    public Integer getPlayId() {
         return playId;
     }
 
-    public void setPlayId(int playId) {
+    public void setPlayId(Integer playId) {
         this.playId = playId;
     }
     
-    public int getPositionId() {
+    public Integer getPositionId() {
         return positionId;
     }
 
-    public void setPositionId(int positionId) {
+    public void setPositionId(Integer positionId) {
         this.positionId = positionId;
     }
     
-    public int getUpperClueId() {
+    public Integer getUpperClueId() {
         return upperClueId;
     }
 
-    public void setUpperClueId(int upperClueId) {
+    public void setUpperClueId(Integer upperClueId) {
         this.upperClueId = upperClueId;
     }
     
@@ -49,11 +49,11 @@ public class Clue {
         this.content = content;
     }
     
-    public int getClueCost() {
+    public Integer getClueCost() {
         return clueCost;
     }
 
-    public void setClueCost(int clueCost) {
+    public void setClueCost(Integer clueCost) {
         this.clueCost = clueCost;
     }
     

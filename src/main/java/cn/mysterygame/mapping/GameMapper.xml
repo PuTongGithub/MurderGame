@@ -69,6 +69,12 @@
     from game
     where game_id = #{gameId}
   </select>
+  <select id="selectByGameId" resultMap="BaseResultMap" parameterType="int" >
+    select
+    <include refid="Base_Column_List" />
+    from game
+    where game_id = #{gameId}
+  </select>
   <select id="selectGameId" resultType="java.lang.Integer" parameterType="cn.mysterygame.entity.Game">
 		select game_id
         from game
@@ -96,4 +102,22 @@
             </if>
 		</trim>
   </select>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.mysterygame.entity.Game" >
+    update game
+    <set>
+      <if test="gameStatus != null" >
+        game_status = #{gameStatus},
+      </if>
+      <if test="voteRound != null" >
+        vote_round = #{voteRound},
+      </if>
+      <if test="clueRound != null" >
+        clue_round = #{clueRound},
+      </if>
+      <if test="clueType != null" >
+        clue_type = #{clueType},
+      </if>
+    </set>
+    where game_id = #{gameId}
+  </update>
 </mapper>

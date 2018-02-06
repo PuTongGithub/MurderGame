@@ -8,4 +8,6 @@ public interface PlayMapper {
 	public void insertSelective(Play play);
 	
 	public List<Play> selectAll();
+	
+	public Play selectByPlayId(int playId);
 }

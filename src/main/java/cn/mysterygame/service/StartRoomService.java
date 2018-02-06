@@ -1,5 +1,7 @@
 package cn.mysterygame.service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -49,10 +51,18 @@ public class StartRoomService {
 		game.setPlayId(playId);
 		game.setHostUserId(userId);
 		game.setGameStatus(1);
-		game.setOpenTime(new Date());
+		//以固定格式获取当前时间
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String time = dateFormat.format(new Date()); 
+		Timestamp nowTimestamp = Timestamp.valueOf(time); 
+		game.setOpenTime(nowTimestamp);
 		gameDao.insertSelective(game);
-		game.setOpenTime(null);
+		//获取gameId，变更game状态
 		Integer gameId = gameDao.selectGameId(game);
+		game.setGameId(gameId);
+		game.setGameStatus(2);
+		gameDao.updateByPrimaryKeySelective(game);
+		
 		//GameRole初始化
 		List<Script> scripts = scriptDao.selectByPlayId(playId);
 		for (Script script : scripts) {
@@ -61,6 +71,7 @@ public class StartRoomService {
 			role.setScriptId(script.getScriptId());
 			gameRoleDao.insertSelective(role);
 		}
+		
 		//GameClue初始化
 		List<Clue> clues = clueDao.selectByPlayId(playId);
 		for (Clue clue : clues) {
