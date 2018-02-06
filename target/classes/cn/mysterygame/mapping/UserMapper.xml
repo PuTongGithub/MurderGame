@@ -23,6 +23,11 @@
         from users
         where user_id= #{userId}
     </select>
+    <select id="selectNameById" resultType="java.lang.String" parameterType="int">
+        select username_
+        from users
+        where user_id= #{userId}
+    </select>
 	<insert id="insertSelective" parameterType="cn.mysterygame.entity.User" >
     insert into users
     <trim prefix="(" suffix=")" suffixOverrides="," >

@@ -63,4 +63,15 @@
     from scripts
     where play_id = #{playId}
   </select>
+    <select id="selectNameById" resultType="java.lang.String" parameterType="int">
+        select role_name
+        from scripts
+        where script_id= #{scriptId}
+    </select>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="int">
+        select
+        <include refid="Base_Column_List" />
+        from scripts
+        where script_id= #{scriptId}
+    </select>
 </mapper>

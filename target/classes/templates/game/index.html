@@ -7,38 +7,286 @@
 <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style type="text/css">
+.row-margin{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.container-margin{
+    margin-top:10px;
+    margin-bottom:60px;
+}
+.button-style{
+    width:100%;
+}
+.title-margin {
+    margin-top:90px;
+    margin-bottom:40px;
+}
+</style>
 </head>
 <body>
 	<div>
 		<!-- Nav tabs -->
 		<ul class="nav nav-tabs" >
 			<li class="active">
-			    <a href="#home" data-toggle="tab">Home</a>
+			    <a href="#gameInfo" data-toggle="tab">游戏信息</a>
 			</li>
 			<li>
-			    <a href="#profile" data-toggle="tab">Profile</a>
+			    <a href="#scriptInfo" data-toggle="tab">剧本</a>
 			</li>
 			<li>
-			    <a href="#messages" data-toggle="tab">Messages</a>
+			    <a href="#clue" data-toggle="tab">线索</a>
 	        </li>
 			<li>
-			    <a href="#settings" data-toggle="tab">Settings</a>
+			    <a href="#vote" data-toggle="tab">投票</a>
 			</li>
+            <li>
+                <a href="#truth" data-toggle="tab">真相</a>
+            </li>
 		</ul>
 
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div class="tab-pane fade in active" id="home">a..</div>
-			<div class="tab-pane fade " id="profile">b..</div>
-			<div class="tab-pane fade " id="messages">c..</div>
-			<div class="tab-pane fade " id="settings"></div>
-		</div>    
+			<div class="tab-pane fade in active" id="gameInfo">
+			    <div class="container container-margin">
+                    <h1><small>游戏房间ID：<span id="gameIdSpan"></span></small></h1>
+                    <h1><small>当前游戏状态：<span id="gameStatusSpan"></span></small></h1>
+                    <h1><small>组织者：<span id="hostNameSpan"></span></small></h1>
+                    <div class="page-header">
+                        <h1><small>扮演者列表</small></h1>
+                    </div>
+                    <div id="gameRolesDiv"></div>
+                </div>
+			</div>
+			<div class="tab-pane fade " id="scriptInfo">
+			    <div class="container container-margin">
+                    <h1 class="text-center title-margin"><span id="roleNameSpan"></span></h1>
+                    <div class="page-header">
+                        <h1><small>角色简介</small></h1>
+                    </div>
+                    <div id="roleIntroDiv"></div>
+                    <div class="page-header">
+                        <h1><small>剧本内容</small></h1>
+                    </div>
+                    <div id="scriptContentDiv"></div>
+                    <div class="page-header">
+                        <h1><small>游戏目标</small></h1>
+                    </div>
+                    <div id="goalDiv"></div>
+                </div>
+			</div>
+			<div class="tab-pane fade " id="clue">
+				<div class="container container-margin">
+                    <div class="page-header">
+                        <h1><small>已获取的线索</small></h1>
+                    </div>
+					<div class="panel-group" id="cluePanelGroup">
+						
+					</div>
+				</div>
+			</div>
+		    <div class="tab-pane fade " id="vote">
+                <div class="container container-margin">
+                    <div class="page-header">
+                        <h1><small>已进行的投票</small></h1>
+                    </div>
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" id="headingOne">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion"
+                                        href="#collapseOne">标题</a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body">内容</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+		    </div>
+			<div class="tab-pane fade " id="truth">
+				<div class="container container-margin">
+					<div class="page-header">
+						<h1>
+							<small>案件真相</small>
+						</h1>
+					</div>
+					<div id="theTruthDiv">真相尚未揭晓。。。。。。</div>
+					
+                    <button id="closeButton" class="btn btn-danger button-style row-margin" 
+                        type="button">离开房间</button>
+				</div>
+			</div>
+		</div>
 
 	</div>
 	<script>
-	$(function(){
-	    $('#settings').load('login.html');
-	})
+	    getGameInfo();
+	    getScript();
+	    getPositions();
+	    
+	    function getScript(){
+            $.ajax({
+                url:'index/getScript',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getScript network wrong!");
+                },
+                success:function(result){
+                    $("#roleNameSpan").html(result.roleName);
+                    $("#roleIntroDiv").html(result.roleIntro);
+                    $("#scriptContentDiv").html(result.content);
+                    $("#goalDiv").html(result.goal);
+                }
+            });
+        }
+	
+	    function getGameInfo(){
+	    	getGame();
+            getRoles();
+	    }
+	    
+	    function getPositions(){
+	    	$.ajax({
+	            url:'index/getPositions',
+	            type:'POST',
+	            cache : false,
+	            dataType : 'json',
+	            error:function(){
+	                alert("getPositions network wrong!");
+	            },
+	            success:function(result){
+	                for(var i=0; i<result.length; i++){
+	                	var collapseId = 'collapse'+result[i].positionId;
+	                	var collapseContentId = 'content'+result[i].positionId;
+	                    $("#cluePanelGroup").append('<div class="panel panel-default">'+
+	                            '<div class="panel-heading">'+
+	                            '<h4 class="panel-title">'+
+	                            '<a data-toggle="collapse" data-parent="#cluePanelGroup" href="#'+collapseId+
+	                            '">'+result[i].content+'</a></div>'+
+	                            '<div id="'+collapseId+'" class="panel-collapse collapse">'+
+	                            '<div class="panel-body" id="'+collapseContentId+'">'+
+	                            '</div></div></div>');
+	                }
+	            }
+	        });
+	    }
+	    
+	    function getGame(){
+	    	$.ajax({
+                url:'index/getGame',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getGame network wrong!");
+                },
+                success:function(result){
+                    $("#gameIdSpan").html(result.gameId);
+                    var status = result.gameStatus;
+                    var statusName = "关闭";
+                    if(status == 1) statusName = "等待";
+                    if(status == 2) statusName = "角色选择阶段";
+                    if(status == 3) statusName = "初始阶段";
+                    if(status == 4) statusName = "搜证阶段";
+                    if(status == 5) statusName = "投票阶段";
+                    if(status == 6) {
+                    	statusName = "结束";
+                    	getPlay();
+                    }
+                    $("#gameStatusSpan").html(statusName);
+                    getName($("#hostNameSpan"), result.hostUserId);
+                }
+            });
+	    }
+	    
+	    function getPlay(){
+	    	$.ajax({
+                url:'index/getPlay',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getPlay network wrong!");
+                },
+                success:function(result){
+                    $("#theTruthDiv").html(result.theTruth);
+                }
+            });
+	    }
+	    
+	    function getRoles(){
+	    	$.ajax({
+                url:'index/getRoles',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getRoles network wrong!");
+                },
+                success:function(result){
+                	$("#gameRolesDiv").empty();
+                	for(var i=0; i<result.length; i++){
+                        $("#gameRolesDiv").append("<h3><span id='nameSpan"+i+
+                        		"'></span>&nbsp;&nbsp;饰&nbsp;&nbsp;<span id='roleNameSpan"+i+
+                                "'></span></h3>");
+                		getRoleName($("#roleNameSpan"+i),result[i].scriptId);
+                		if(result.userId != 0){
+                			getName($("#nameSpan"+i), result[i].userId);
+                		}
+                		
+                	}
+                }
+            });
+	    }
+	    
+	    function getName(obj, userId){
+	    	var jsonData = {"userId":userId};
+	    	$.ajax({
+                url:'index/getName',
+                type:'POST',
+                cache : false,
+                data : jsonData,
+                error:function(){
+                    alert("getName network wrong!");
+                },
+                success:function(result){
+                    obj.html(result);
+                }
+            });
+	    }
+	    
+	    function getRoleName(obj, scriptId){
+            var jsonData = {"scriptId":scriptId};
+            $.ajax({
+                url:'index/getRoleName',
+                type:'POST',
+                cache : false,
+                data : jsonData,
+                error:function(){
+                    alert("getRoleName network wrong!");
+                },
+                success:function(result){
+                    obj.html(result);
+                }
+            });
+        }
+		$(function() {
+			$("a[href='#gameInfo']").click(function() {
+                getGameInfo();
+            });
+			$("a[href='#truth']").click(function() {
+				getGame();
+            });
+			
+			$("#closeButton").click(function(){
+                window.location.href = "lobby.html";
+			});
+		})
 	</script>
 </body>
 </html>

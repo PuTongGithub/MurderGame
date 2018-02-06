@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,11 +42,22 @@ public class RoleController {
 	
 	@PostMapping("/confirm")
 	public Map<String, Object> confirm(@CookieValue("gameId") int gameId,
-			@CookieValue("userId") int userId, int scriptId){
+			@CookieValue("userId") int userId, int scriptId,HttpServletResponse response){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(roleService.roleConfirm(gameId, userId, scriptId)) {
 			map.put("success", true);
 			map.put("message", "选择成功！");
+			
+			roleService.userStatusChange(userId, gameId);
+			Cookie cookie = new Cookie("userStatus", String.valueOf(1));
+			cookie.setMaxAge(-1);
+			cookie.setPath("/");
+			cookie = new Cookie("gameId", String.valueOf(gameId));
+			cookie.setMaxAge(-1);
+			cookie.setPath("/");
+			response.addCookie(cookie);
+			
+			roleService.clueSendOut(gameId, userId, scriptId);
 		}
 		else {
 			map.put("success", false);

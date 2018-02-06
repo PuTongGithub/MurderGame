@@ -7,6 +7,8 @@ public interface UserMapper {
 	
 	public User selectByUserId(int userId);
 	
+	public String selectNameById(int userId);
+	
 	public void insertSelective(User user);
 	
 	public void updateByUserId(User user);

@@ -8,4 +8,8 @@ public interface ScriptMapper {
 	public void insertSelective(Script script);
 	
 	public List<Script> selectByPlayId(int playId);
+	
+	public String selectNameById(int scriptId);
+	
+	public Script selectById(int scriptId);
 }

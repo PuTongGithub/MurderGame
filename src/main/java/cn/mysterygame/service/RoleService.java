@@ -9,10 +9,12 @@ import cn.mysterygame.dao.GameMapper;
 import cn.mysterygame.dao.GameRoleMapper;
 import cn.mysterygame.dao.PlayMapper;
 import cn.mysterygame.dao.ScriptMapper;
+import cn.mysterygame.dao.UserMapper;
 import cn.mysterygame.entity.Game;
 import cn.mysterygame.entity.GameRole;
 import cn.mysterygame.entity.Play;
 import cn.mysterygame.entity.Script;
+import cn.mysterygame.entity.User;
 
 @Service
 public class RoleService {
@@ -24,6 +26,8 @@ public class RoleService {
 	ScriptMapper scriptDao;
 	@Autowired
 	GameRoleMapper gameRoleDao;
+	@Autowired
+	UserMapper userDao;
 	
 	public Play getPlay(int gameId) {
 		Game game = gameDao.selectByGameId(gameId);
@@ -51,5 +55,16 @@ public class RoleService {
 		else {
 			return false;
 		}
+	}
+	
+	public void clueSendOut(int gameId, int userId, int scriptId) {
+		//to do
+	}
+	
+	public void userStatusChange(int userId, int gameId) {
+		User user = userDao.selectByUserId(userId);
+		user.setUserStatus(1);
+		user.setGameId(gameId);
+		userDao.updateByUserId(user);
 	}
 }
