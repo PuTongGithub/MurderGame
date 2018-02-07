@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.mysterygame.dao.GameMapper">
+	<resultMap id="BaseResultMap" type="cn.mysterygame.entity.Game">
+		<id column="game_id" property="gameId" />
+        <result column="play_id" property="playId" />
+        <result column="host_user_id" property="hostUserId" />
+		<result column="game_status" property="gameStatus" />
+        <result column="vote_round" property="voteRound" />
+        <result column="clue_round" property="clueRound" />
+        <result column="clue_type" property="clueType" />
+        <result column="open_time" property="openTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		game_id, play_id, host_user_id, game_status,
+		vote_round, clue_round, clue_type, open_time
+	</sql>
+	<insert id="insertSelective" parameterType="cn.mysterygame.entity.Game" >
+    insert into game
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="playId != null" >
+        play_id,
+      </if>
+      <if test="hostUserId != null" >
+        host_user_id,
+      </if>
+      <if test="gameStatus != null" >
+        game_status,
+      </if>
+      <if test="voteRound != null" >
+        vote_round,
+      </if>
+      <if test="clueRound != null" >
+        clue_round,
+      </if>
+      <if test="clueType != null" >
+        clue_type,
+      </if>
+      <if test="openTime != null" >
+        open_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="playId != null" >
+        #{playId},
+      </if>
+      <if test="hostUserId != null" >
+        #{hostUserId},
+      </if>
+      <if test="gameStatus != null" >
+        #{gameStatus},
+      </if>
+      <if test="voteRound != null" >
+        #{voteRound},
+      </if>
+      <if test="clueRound != null" >
+        #{clueRound},
+      </if>
+      <if test="clueType != null" >
+        #{clueType},
+      </if>
+      <if test="openTime != null" >
+        #{openTime},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectGameStatusById" resultType="java.lang.Integer" parameterType="int" >
+    select game_status
+    from game
+    where game_id = #{gameId}
+  </select>
+  <select id="selectByGameId" resultMap="BaseResultMap" parameterType="int" >
+    select
+    <include refid="Base_Column_List" />
+    from game
+    where game_id = #{gameId}
+  </select>
+  <select id="selectGameId" resultType="java.lang.Integer" parameterType="cn.mysterygame.entity.Game">
+		select game_id
+        from game
+		<trim prefix="where " prefixOverrides="and">
+            <if test="playId != null"> 
+                and play_id = #{playId}
+            </if>
+            <if test="hostUserId != null"> 
+                and host_user_id = #{hostUserId}
+            </if>
+            <if test="gameStatus != null"> 
+                and game_status = #{gameStatus}
+            </if>
+            <if test="voteRound != null"> 
+                and vote_round = #{voteRound}
+            </if>
+            <if test="clueRound != null"> 
+                and clue_round = #{clueRound}
+            </if>
+            <if test="clueType != null"> 
+                and clue_type = #{clueType}
+            </if>
+            <if test="openTime != null"> 
+                and open_time = #{openTime}
+            </if>
+		</trim>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.mysterygame.entity.Game" >
+    update game
+    <set>
+      <if test="gameStatus != null" >
+        game_status = #{gameStatus},
+      </if>
+      <if test="voteRound != null" >
+        vote_round = #{voteRound},
+      </if>
+      <if test="clueRound != null" >
+        clue_round = #{clueRound},
+      </if>
+      <if test="clueType != null" >
+        clue_type = #{clueType},
+      </if>
+    </set>
+    where game_id = #{gameId}
+  </update>
+</mapper>

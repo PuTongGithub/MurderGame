@@ -37,7 +37,7 @@ public class Position {
         return clueRound;
     }
 
-    public void setClueRoundt(Integer clueRound) {
+    public void setClueRound(Integer clueRound) {
         this.clueRound = clueRound;
     }
 }
