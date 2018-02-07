@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.mysterygame.entity.Clue;
 import cn.mysterygame.entity.Game;
 import cn.mysterygame.entity.GameRole;
 import cn.mysterygame.entity.Play;
@@ -55,5 +56,10 @@ public class IndexController {
 	@PostMapping("/getPositions")
 	public List<Position> getPositions(@CookieValue("gameId") int gameId) {
 		return indexService.getPositions(gameId);
+	}
+	
+	@PostMapping("/getClues")
+	public List<Clue> getClues(@CookieValue("gameId") int gameId, @CookieValue("userId") int userId){
+		return indexService.getClues(gameId, userId);
 	}
 }

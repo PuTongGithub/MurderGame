@@ -19,6 +19,10 @@
 .button-style{
     width:100%;
 }
+.refresh-style{
+    float:right;
+    margin-bottom:10px;
+}
 .title-margin {
     margin-top:90px;
     margin-bottom:40px;
@@ -78,16 +82,32 @@
 			</div>
 			<div class="tab-pane fade " id="clue">
 				<div class="container container-margin">
+                    <div class="container">
+                        <div class="row">
+                            <button class="btn btn-default col-md-8 col-xs-8">搜寻线索</button>
+                            <button id="clueRefresh"
+                                class="btn btn-default col-md-2 col-xs-2 col-md-offset-2 col-xs-offset-2">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="page-header">
                         <h1><small>已获取的线索</small></h1>
                     </div>
-					<div class="panel-group" id="cluePanelGroup">
-						
-					</div>
+					<div class="panel-group" id="cluePanelGroup"></div>
 				</div>
 			</div>
 		    <div class="tab-pane fade " id="vote">
                 <div class="container container-margin">
+                    <div class="container">
+                        <div class="row">
+                            <button class="btn btn-default col-md-8 col-xs-8">进行投票</button>
+                            <button
+                                class="btn btn-default col-md-2 col-xs-2 col-md-offset-2 col-xs-offset-2">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="page-header">
                         <h1><small>已进行的投票</small></h1>
                     </div>
@@ -161,8 +181,8 @@
 	            },
 	            success:function(result){
 	                for(var i=0; i<result.length; i++){
-	                	var collapseId = 'collapse'+result[i].positionId;
-	                	var collapseContentId = 'content'+result[i].positionId;
+	                	var collapseId = 'clueCollapse'+result[i].positionId;
+	                	var collapseContentId = 'clueContent'+result[i].positionId;
 	                    $("#cluePanelGroup").append('<div class="panel panel-default">'+
 	                            '<div class="panel-heading">'+
 	                            '<h4 class="panel-title">'+
@@ -175,6 +195,25 @@
 	            }
 	        });
 	    }
+	    
+	    function getClues(){
+            $.ajax({
+                url:'index/getClues',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getClues network wrong!");
+                },
+                success:function(result){
+                    $("div.panel-body").empty();
+                    for(var i=0; i<result.length; i++){
+                        var collapseContentId = 'clueContent'+result[i].positionId;
+                        $("#"+collapseContentId).append('<p>'+result[i].content+'</p>');
+                    }
+                }
+            });
+        }
 	    
 	    function getGame(){
 	    	$.ajax({
@@ -282,6 +321,12 @@
 			$("a[href='#truth']").click(function() {
 				getGame();
             });
+            $("a[href='#clue']").click(function() {
+                getClues();
+            });
+            $("#clueRefresh").click(function(){
+                getClues();
+            })
 			
 			$("#closeButton").click(function(){
                 window.location.href = "lobby.html";

@@ -1,6 +1,7 @@
 package cn.mysterygame.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.mysterygame.entity.Clue;
 import cn.mysterygame.entity.Game;
+import cn.mysterygame.entity.GameRole;
 import cn.mysterygame.entity.Play;
+import cn.mysterygame.entity.Position;
 import cn.mysterygame.service.HostService;
 
 @RestController
@@ -98,6 +102,37 @@ public class HostController {
 		
 		map.put("success", true);
 		map.put("message", "游戏结束！");
+		return map;
+	}
+	
+	@PostMapping("/getClues")
+	public List<Clue> getClues(@CookieValue("gameId") int gameId){
+		return hostService.getClues(gameId);
+	}
+	
+	@PostMapping("/getPositions")
+	public List<Position> getPositions(@CookieValue("gameId") int gameId){
+		return hostService.getPositions(gameId);
+	}
+	
+	@PostMapping("/getGameRoles")
+	public List<GameRole> getGameRoles(@CookieValue("gameId") int gameId){
+		return hostService.getGameRoles(gameId);
+	}
+	
+	@PostMapping("/sendOut")
+	public Map<String, Object> sendOut(@CookieValue("gameId") int gameId, int userId,
+			int clueId, int positionId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(userId != 0) {
+			hostService.sendOut(gameId, userId, clueId, positionId);
+		}
+		else {
+			hostService.sendOutAll(gameId, clueId, positionId);
+		}
+		
+		map.put("success", true);
+		map.put("message", "线索分发成功！");
 		return map;
 	}
 }

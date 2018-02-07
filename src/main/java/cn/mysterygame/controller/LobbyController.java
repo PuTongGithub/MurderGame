@@ -36,11 +36,6 @@ public class LobbyController {
 		} else if (status == 1) {
 			map.put("success", false);
 			map.put("message", "游戏尚未开始！");
-		} else if (status == 2) {
-			setCookie(response, gameId);
-			map.put("success", true);
-			map.put("message", "进入房间！");
-			map.put("url","role.html");
 		} else {
 			GameRole role = lobbyService.findUserInRoom(gameId, userId);
 			if (role != null) {
@@ -49,8 +44,16 @@ public class LobbyController {
 				map.put("message", "进入房间！");
 				map.put("url", "index.html");
 			} else {
-				map.put("success", false);
-				map.put("message", "游戏已开始！");
+				if (status == 2) {
+					setCookie(response, gameId);
+					map.put("success", true);
+					map.put("message", "进入房间！");
+					map.put("url","role.html");
+				}
+				else {
+					map.put("success", false);
+					map.put("message", "游戏已开始！");
+				}
 			}
 		}
 		return map;

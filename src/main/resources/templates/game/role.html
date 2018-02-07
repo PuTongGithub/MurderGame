@@ -110,6 +110,12 @@
                         $(obj).attr("class", newClass);
                 	}
                 }
+                $('[class="list-group-item"]').bind("click",function(){
+                    scriptId = $(this).attr("data-id");
+                    roleName = $(this).attr("data-name");
+                    $('#modalBodyDiv').html("本局游戏中你将扮演："+roleName);
+                    $('#myModal').modal("show");
+                });
             }
         });
     }
@@ -118,12 +124,6 @@
     var roleName;
     
     $(function(){
-        $('[class="list-group-item"]').click(function(){
-        	scriptId = $(this).attr("data-id");
-        	roleName = $(this).attr("data-name");
-        	$('#modalBodyDiv').html("本局游戏中你将扮演："+roleName);
-        	$('#myModal').modal("show");
-        });
         
         $('#confirmButton').click(function(){
             $('#myModal').modal("hide");

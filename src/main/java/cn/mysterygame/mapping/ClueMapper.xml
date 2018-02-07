@@ -63,4 +63,10 @@
     from clues
     where play_id = #{playId}
   </select>
+  <select id="selectByClueId" resultMap="BaseResultMap" parameterType="int">
+    select
+    <include refid="Base_Column_List" />
+    from clues
+    where clue_id = #{clueId}
+  </select>
 </mapper>

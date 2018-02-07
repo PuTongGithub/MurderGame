@@ -1,17 +1,22 @@
 package cn.mysterygame.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.mysterygame.dao.ClueMapper;
+import cn.mysterygame.dao.GameClueMapper;
 import cn.mysterygame.dao.GameMapper;
 import cn.mysterygame.dao.GameRoleMapper;
 import cn.mysterygame.dao.PlayMapper;
 import cn.mysterygame.dao.PositionMapper;
 import cn.mysterygame.dao.ScriptMapper;
 import cn.mysterygame.dao.UserMapper;
+import cn.mysterygame.entity.Clue;
 import cn.mysterygame.entity.Game;
+import cn.mysterygame.entity.GameClue;
 import cn.mysterygame.entity.GameRole;
 import cn.mysterygame.entity.Play;
 import cn.mysterygame.entity.Position;
@@ -32,6 +37,10 @@ public class IndexService {
 	PlayMapper playDao;
 	@Autowired
 	PositionMapper positionDao;
+	@Autowired
+	GameClueMapper gameClueDao;
+	@Autowired
+	ClueMapper clueDao;
 	
 	public String getName(int userId) {
 		return userDao.selectNameById(userId);
@@ -62,5 +71,14 @@ public class IndexService {
 	public List<Position> getPositions(int gameId){
 		Game game = gameDao.selectByGameId(gameId);
 		return positionDao.selectByPlayId(game.getPlayId());
+	}
+	
+	public List<Clue> getClues(int gameId, int userId){
+		List<Clue> clues = new ArrayList<>();
+		List<GameClue> gameClues = gameClueDao.selectByGameUser(gameId, userId);
+		for (GameClue gameClue : gameClues) {
+			clues.add(clueDao.selectByClueId(gameClue.getClueId()));
+		}
+		return clues;
 	}
 }

@@ -130,21 +130,51 @@
                         type="button">关闭房间</button>
 				</div>
 			</div>
-            <div class="tab-pane fade " id="handOut">c</div>
-        </div>    
-
+			<div class="tab-pane fade " id="handOut">
+				<div id="handOutDiv" class="container" style="margin-bottom: 60px;">
+				</div>
+			</div>
+		</div>    
     </div>
-	<script>
-    getPlayInfo();
     
-		function getPlayInfo() {
-			$.ajax({
+    <div class="modal fade" id="myModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">线索分发</h4>
+                </div>
+                <div class="modal-body" id="modalBodyDiv">
+                    <div>你要将该线索分发给谁？</div>
+                    <form id="modalForm">
+                        <input id="clueIdInput" type="text" name="clueId" hidden="hidden">
+						<input id="positionIdInput" type="text" name="positionId" hidden="hidden">
+					</form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="confirmButton">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+	<script>
+
+    getPlayInfo();
+    getPositions();
+
+        function getPlayInfo() {
+            $.ajax({
                 url : 'host/getPlay',
                 type : 'POST',
                 cache : false,
                 dataType : 'json',
                 error : function() {
-                    alert("network wrong!");
+                    alert("getPlay network wrong!");
                 },
                 success : function(result) {
                     $("#playNameSpan").html(result.playName);
@@ -160,7 +190,117 @@
                     $("#theTruthDiv").html(result.theTruth);
                 }
             });
+        }
+        
+        function getPositions(){
+            $.ajax({
+                url:'host/getPositions',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getPositions network wrong!");
+                },
+                success:function(result){
+                    for(var i=0; i<result.length; i++){
+                        var listDivId = 'listDiv'+result[i].positionId;
+                        $("#handOutDiv").append('<div class="page-header">'+
+                                '<h1><small>'+result[i].content+'</small></h1></div>'+
+                                '<div id="'+listDivId+'" class="list-group list-style"></div>');
+                    }
+                    getClues()
+                }
+            });
+        }
+        
+        function getClues(){
+            $.ajax({
+                url:'host/getClues',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getClues network wrong!");
+                },
+                success:function(result){
+                    for(var i=0; i<result.length; i++){
+                        var listDivId = 'listDiv'+result[i].positionId;
+                        $("#"+listDivId).append(
+                                '<a class="list-group-item" data-id="'+result[i].clueId+
+                                '" data-position="'+result[i].positionId+'">'+
+                                '<div>'+result[i].content+'</div></a>');
+                    }
+                    $('a.list-group-item').bind("click",function(){
+                        $('#clueIdInput').val($(this).attr("data-id"));
+                        $('#positionIdInput').val($(this).attr("data-position"));
+                        getUsers();
+                        $('#myModal').modal("show");
+                    });
+                }
+            });
+        }
+		
+		function getUsers(){
+			$.ajax({
+                url:'host/getGameRoles',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getGameRoles network wrong!");
+                },
+                success:function(result){
+                	$('[class="radio"]').remove();
+                	$("#modalForm").append('<div class="radio">'+
+                            '<label><input type="radio" name="userId" value="0" '+
+                            'checked>所有人</label></div>');
+                    for(var i=0; i<result.length; i++){
+                        if(result[i].userId != 0){
+                    	var roleSpanId = "roleSpan"+result[i].scriptId;
+                    	var userSpanId = "userSpan"+result[i].userId;
+                        $("#modalForm").append('<div class="radio">'+
+                        		'<label><input type="radio" name="userId"'+
+                        		' value="'+result[i].userId+'"><span id="'+roleSpanId+
+                        		'"></span>(<span id="'+userSpanId+'"></span>)</label><div>');
+                        getRoleName($('#'+roleSpanId), result[i].scriptId);
+                        getName($('#'+userSpanId), result[i].userId);
+                        }
+                    }
+                }
+            });
 		}
+		
+		function getName(obj, userId){
+            var jsonData = {"userId":userId};
+            $.ajax({
+                url:'index/getName',
+                type:'POST',
+                cache : false,
+                data : jsonData,
+                error:function(){
+                    alert("getName network wrong!");
+                },
+                success:function(result){
+                    obj.html(result);
+                }
+            });
+        }
+        
+        function getRoleName(obj, scriptId){
+            var jsonData = {"scriptId":scriptId};
+            $.ajax({
+                url:'index/getRoleName',
+                type:'POST',
+                cache : false,
+                data : jsonData,
+                error:function(){
+                    alert("getRoleName network wrong!");
+                },
+                success:function(result){
+                    obj.html(result);
+                }
+            });
+        }
 
 		$(function() {
 			$("a[href='#gameInfo']").click(function() {
@@ -266,6 +406,23 @@
                     success : function(result) {
                         alert(result.message);
                         window.location.href = "lobby.html";
+                    }
+                });
+            })
+            
+            $("#confirmButton").click(function(){
+            	$.ajax({
+                    url : 'host/sendOut',
+                    type : 'POST',
+                    cache : false,
+                    data : $('#modalForm').serialize(),
+                    dataType : 'json',
+                    error : function() {
+                        alert("sendOut network wrong!");
+                    },
+                    success : function(result) {
+                        alert(result.message);
+                        $('#myModal').modal("hide");
                     }
                 });
             })

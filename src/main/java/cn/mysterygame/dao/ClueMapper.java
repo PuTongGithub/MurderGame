@@ -8,4 +8,6 @@ public interface ClueMapper {
 	public void insertSelective(Clue clue);
 	
 	public List<Clue> selectByPlayId(int playId);
+	
+	public Clue selectByClueId(int clueId);
 }
