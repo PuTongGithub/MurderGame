@@ -46,7 +46,7 @@
     select
     <include refid="Base_Column_List" />
     from game_clue
-    where game_id = #{0}
-    and user_id = #{1}
+    where game_id = #{arg0}
+    and user_id = #{arg1}
   </select>
 </mapper>
