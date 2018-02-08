@@ -58,6 +58,7 @@
                         <h1><small>案件真相</small></h1>
                     </div>
                     <div id="theTruthDiv"></div>
+                    <div id="notTruthDiv">真相尚未揭晓。。。。。。</div>
                 </div>
             </div>
             <div class="tab-pane fade" id="gameInfo">
@@ -107,20 +108,13 @@
                     <div class="page-header">
                         <h1><small>投票阶段</small></h1>
                     </div>
-                    <form id="voteForm">
-                        <div class="form-group">
-                            <label>设置投票轮次：</label>
-                            <select class="form-control" name="voteRound">
-                                <option value="1">第一轮</option>
-                                <option value="2">第二轮</option>
-                                <option value="3">第三轮</option>
-                                <option value="4">第四轮</option>
-                                <option value="5">第五轮</option>
-                            </select>
-                        </div>
-                        <button id="voteFormButton" class="btn btn-primary button-style"
+                    <div>
+                        <button id="voteFormButton" class="btn btn-primary button-style row-margin"
                         type="button">开始新的一轮投票</button>
-                    </form>
+                        <div id="voteResultDiv"></div>
+                        <button id="getVotesButton" class="btn btn-primary button-style row-margin"
+                        type="button">获取投票结果</button>
+                    </div>
                     <div class="page-header">
                         <h1><small>结束游戏</small></h1>
                     </div>
@@ -187,7 +181,47 @@
                     $("#playTypeSpan").html(typeName);
                     $("#playIntroDiv").html(result.playIntro);
                     $("#hostGuideDiv").html(result.hostGuide);
+                    $("#theTruthDiv").hide();
                     $("#theTruthDiv").html(result.theTruth);
+                    getGameInfo();
+                }
+            });
+        }
+
+        function getGameInfo(){
+            $.ajax({
+                url : 'host/getGame',
+                type : 'POST',
+                cache : false,
+                dataType : 'json',
+                error : function() {
+                    alert("network wrong!");
+                },
+                success : function(result) {
+                    $("#gameIdSpan").html(result.gameId);
+                    var status = result.gameStatus;
+                    var statusName = "关闭";
+                    if(status == 1) statusName = "等待";
+                    if(status == 2) statusName = "角色选择阶段";
+                    if(status == 3) statusName = "初始阶段";
+                    if(status == 4) statusName = "搜证阶段";
+                    if(status == 5) statusName = "投票阶段";
+                    if(status == 6) {
+                        statusName = "结束";
+                        $("#theTruthDiv").show();
+                        $("#notTruthDiv").hide();
+                    }
+                    $("#gameStatusSpan").html(statusName);
+                    $("#clueRoundSpan").html(result.clueRound);
+                    $("#voteRoundSpan").html(result.voteRound);
+                    var type = result.clueType;
+                    var typeName = "被分发";
+                    if(type == 1) typeName = "不重复";
+                    if(type == 2) typeName = "可重复";
+                    $("#clueTypeSpan").html(typeName);
+                    var time = result.openTime;
+                    var date = new Date(time);
+                    $("#openTimeSpan").html(date.toLocaleString());
                 }
             });
         }
@@ -233,6 +267,10 @@
                     $('a.list-group-item').bind("click",function(){
                         $('#clueIdInput').val($(this).attr("data-id"));
                         $('#positionIdInput').val($(this).attr("data-position"));
+
+                        var newClass = $(this).attr("class")+" disabled";
+                        $(this).attr("class", newClass);
+                        
                         getUsers();
                         $('#myModal').modal("show");
                     });
@@ -301,40 +339,59 @@
                 }
             });
         }
-
+        
+        function getVotes(){
+            $.ajax({
+                url:'index/getVotes',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getVotes network wrong!");
+                },
+                success:function(result){
+                    for(var i=0; i<result.length; i++){
+                        var voteListDivId = 'voteListDiv'+result[i].voteRound;
+                        var userRoleNameSpanId = "userRoleNameSpan"+result[i].userId;
+                        var userNameSpanId = "userNameSpan"+result[i].userId;
+                        var voteUserRoleNameSpanId = "voteUserRoleNameSpan"+result[i].voteUserId;
+                        var voteUserNameSpanId = "voteUserNameSpan"+result[i].voteUserId;
+                        $("#"+voteListDivId).append(
+                                '<li class="list-group-item">'+
+                                '<span data-id="'+userRoleNameSpanId+
+                                '"></span>(<span data-id="'+userNameSpanId+'"></span>)'+
+                                '--->'+
+                                '<span data-id="'+voteUserRoleNameSpanId+
+                                '"></span>(<span data-id="'+voteUserNameSpanId+'"></span>)'+
+                                '</li>');
+                        getRoleNameByUserId($('[data-id="'+userRoleNameSpanId+'"]'), result[i].userId);
+                        getName($('[data-id="'+userNameSpanId+'"]'), result[i].userId);
+                        getRoleNameByUserId($('[data-id="'+voteUserRoleNameSpanId+'"]'), result[i].voteUserId);
+                        getName($('[data-id="'+voteUserNameSpanId+'"]'), result[i].voteUserId);
+                    }
+                }
+            });
+        }
+        
+        function getRoleNameByUserId(obj, userId){
+            var jsonData = {"userId":userId};
+            $.ajax({
+                url:'index/getRoleNameByUserId',
+                type:'POST',
+                cache : false,
+                data : jsonData,
+                error:function(){
+                    alert("getRoleNameByUserId network wrong!");
+                },
+                success:function(result){
+                    obj.html(result);
+                }
+            });
+        }
+        
 		$(function() {
 			$("a[href='#gameInfo']").click(function() {
-				$.ajax({
-	                url : 'host/getGame',
-	                type : 'POST',
-	                cache : false,
-	                dataType : 'json',
-	                error : function() {
-	                    alert("network wrong!");
-	                },
-	                success : function(result) {
-	                    $("#gameIdSpan").html(result.gameId);
-	                    var status = result.gameStatus;
-	                    var statusName = "关闭";
-	                    if(status == 1) statusName = "等待";
-	                    if(status == 2) statusName = "角色选择阶段";
-	                    if(status == 3) statusName = "初始阶段";
-	                    if(status == 4) statusName = "搜证阶段";
-	                    if(status == 5) statusName = "投票阶段";
-	                    if(status == 6) statusName = "结束";
-	                    $("#gameStatusSpan").html(statusName);
-	                    $("#clueRoundSpan").html(result.clueRound);
-	                    $("#voteRoundSpan").html(result.voteRound);
-	                    var type = result.clueType;
-	                    var typeName = "被分发";
-	                    if(type == 1) typeName = "不重复";
-	                    if(type == 2) typeName = "可重复";
-	                    $("#clueTypeSpan").html(typeName);
-	                    var time = result.openTime;
-	                    var date = new Date(time);
-	                    $("#openTimeSpan").html(date.toLocaleString());
-	                }
-	            });
+				getGameInfo();
 			});
 			 
 			$("#clueFormButton").click(function(){
@@ -366,7 +423,6 @@
 					url : 'host/voteStart',
 					type : 'POST',
 					cache : false,
-					data : $('#voteForm').serialize(),
 					dataType : 'json',
 					error : function() {
 						$('#formErrorAlert').css("display", "block");
@@ -390,6 +446,8 @@
 					},
 					success : function(result) {
 						alert(result.message);
+                        $("#theTruthDiv").show();
+                        $("#notTruthDiv").hide();
 					}
 				});
 			})
@@ -423,6 +481,29 @@
                     success : function(result) {
                         alert(result.message);
                         $('#myModal').modal("hide");
+                    }
+                });
+            })
+            
+            $("#getVotesButton").click(function(){
+                $.ajax({
+                    url:'index/getGame',
+                    type:'POST',
+                    cache : false,
+                    dataType : 'json',
+                    error:function(){
+                        alert("getGame network wrong!");
+                    },
+                    success:function(result){
+                            $("#voteResultDiv").empty();
+                            for(var i=1; i<=result.voteRound; i++){
+                                var voteListDivId = 'voteListDiv'+i;
+                                var roundNum = i+1;
+                                $("#voteResultDiv").append('<div class="page-header">'+
+                                        '<h1><small>第'+i+'轮投票结果</small></h1></div>'+
+                                        '<ul id="'+voteListDivId+'" class="list-group"></ul>');
+                            }
+                            getVotes();
                     }
                 });
             })

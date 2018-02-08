@@ -82,7 +82,7 @@
 			</div>
 			<div class="tab-pane fade " id="clue">
 				<div class="container container-margin">
-                    <div class="container">
+                    <!-- <div class="container">
                         <div class="row">
                             <button class="btn btn-default col-md-8 col-xs-8">搜寻线索</button>
                             <button id="clueRefresh"
@@ -90,7 +90,7 @@
                                 <span class="glyphicon glyphicon-refresh"></span>
                             </button>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="page-header">
                         <h1><small>已获取的线索</small></h1>
                     </div>
@@ -99,29 +99,15 @@
 			</div>
 		    <div class="tab-pane fade " id="vote">
                 <div class="container container-margin">
+                    <div class="page-header">
+                        <h1><small>投票阶段</small></h1>
+                    </div>
+                    <div id="voteResultDiv"></div>
                     <div class="container">
                         <div class="row">
-                            <button class="btn btn-default col-md-8 col-xs-8">进行投票</button>
-                            <button
-                                class="btn btn-default col-md-2 col-xs-2 col-md-offset-2 col-xs-offset-2">
-                                <span class="glyphicon glyphicon-refresh"></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="page-header">
-                        <h1><small>已进行的投票</small></h1>
-                    </div>
-                    <div class="panel-group" id="accordion">
-                        <div class="panel panel-default">
-                            <div class="panel-heading" id="headingOne">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion"
-                                        href="#collapseOne">标题</a>
-                                </h4>
-                            </div>
-                            <div id="collapseOne" class="panel-collapse collapse in">
-                                <div class="panel-body">内容</div>
-                            </div>
+                            <button id="beginVoteButton" class="btn btn-primary col-md-5 col-xs-5">进行投票</button>
+                            <button id="getVotesButton" class="btn btn-primary col-md-5 col-xs-5 
+                            col-md-offset-2 col-xs-offset-2">获取结果</button>
                         </div>
                     </div>
                 </div>
@@ -142,6 +128,31 @@
 		</div>
 
 	</div>
+	
+	<div class="modal fade" id="voteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">投票</h4>
+                </div>
+                <div class="modal-body" id="modalBodyDiv">
+                    <div>你要将这一票给谁？</div>
+                    <form id="voteForm">
+                        <input id="voteRoundInput" type="text" name="voteRound" hidden="hidden">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="confirmButton">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 	<script>
 	    getGameInfo();
 	    getScript();
@@ -192,6 +203,9 @@
 	                            '<div class="panel-body" id="'+collapseContentId+'">'+
 	                            '</div></div></div>');
 	                }
+	                $('[data-toggle]').bind('click',function(){
+	                	getClues();
+	                })
 	            }
 	        });
 	    }
@@ -206,10 +220,10 @@
                     alert("getClues network wrong!");
                 },
                 success:function(result){
-                    $("div.panel-body").empty();
+                    $("#cluePanelGroup .panel-body").empty();
                     for(var i=0; i<result.length; i++){
                         var collapseContentId = 'clueContent'+result[i].positionId;
-                        $("#"+collapseContentId).append('<p>'+result[i].content+'</p>');
+                        $("#"+collapseContentId).append('<p>*'+result[i].content+'</p>');
                     }
                 }
             });
@@ -263,6 +277,7 @@
                 url:'index/getRoles',
                 type:'POST',
                 cache : false,
+                data : $('#clueForm').serialize(),
                 dataType : 'json',
                 error:function(){
                     alert("getRoles network wrong!");
@@ -282,6 +297,33 @@
                 }
             });
 	    }
+	    
+	    function getUsers(){
+            $.ajax({
+                url:'host/getGameRoles',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getGameRoles network wrong!");
+                },
+                success:function(result){
+                    $('[class="radio"]').remove();
+                    for(var i=0; i<result.length; i++){
+                        if(result[i].userId != 0){
+                        var roleSpanId = "roleSpan"+result[i].scriptId;
+                        var userSpanId = "userSpan"+result[i].userId;
+                        $("#voteForm").append('<div class="radio">'+
+                                '<label><input type="radio" name="voteUserId"'+
+                                ' value="'+result[i].userId+'"><span id="'+roleSpanId+
+                                '"></span>(<span id="'+userSpanId+'"></span>)</label><div>');
+                        getRoleName($('#'+roleSpanId), result[i].scriptId);
+                        getName($('#'+userSpanId), result[i].userId);
+                        }
+                    }
+                }
+            });
+        }
 	    
 	    function getName(obj, userId){
 	    	var jsonData = {"userId":userId};
@@ -314,6 +356,72 @@
                 }
             });
         }
+        
+        function getRoleNameByUserId(obj, userId){
+            var jsonData = {"userId":userId};
+            $.ajax({
+                url:'index/getRoleNameByUserId',
+                type:'POST',
+                cache : false,
+                data : jsonData,
+                error:function(){
+                    alert("getRoleNameByUserId network wrong!");
+                },
+                success:function(result){
+                    obj.html(result);
+                }
+            });
+        }
+	    
+	    function doVote(){
+            $.ajax({
+                url:'index/doVote',
+                type:'POST',
+                cache : false,
+                data : $("#voteForm").serialize(),
+                error:function(){
+                    alert("doVote network wrong!");
+                },
+                success:function(result){
+                    $("#voteModal").modal("hide");
+                    alert(result.message);
+                }
+            });
+        }
+	    
+	    function getVotes(){
+	    	$.ajax({
+                url:'index/getVotes',
+                type:'POST',
+                cache : false,
+                dataType : 'json',
+                error:function(){
+                    alert("getVotes network wrong!");
+                },
+                success:function(result){
+                	for(var i=0; i<result.length; i++){
+                        var voteListDivId = 'voteListDiv'+result[i].voteRound;
+                        var userRoleNameSpanId = "userRoleNameSpan"+result[i].userId;
+                        var userNameSpanId = "userNameSpan"+result[i].userId;
+                        var voteUserRoleNameSpanId = "voteUserRoleNameSpan"+result[i].voteUserId;
+                        var voteUserNameSpanId = "voteUserNameSpan"+result[i].voteUserId;
+                        $("#"+voteListDivId).append(
+                                '<li class="list-group-item">'+
+                                '<span data-id="'+userRoleNameSpanId+
+                                '"></span>(<span data-id="'+userNameSpanId+'"></span>)'+
+                                '--->'+
+                                '<span data-id="'+voteUserRoleNameSpanId+
+                                '"></span>(<span data-id="'+voteUserNameSpanId+'"></span>)'+
+                                '</li>');
+                        getRoleNameByUserId($('[data-id="'+userRoleNameSpanId+'"]'), result[i].userId);
+                        getName($('[data-id="'+userNameSpanId+'"]'), result[i].userId);
+                        getRoleNameByUserId($('[data-id="'+voteUserRoleNameSpanId+'"]'), result[i].voteUserId);
+                        getName($('[data-id="'+voteUserNameSpanId+'"]'), result[i].voteUserId);
+                    }
+                }
+            });
+	    }
+	    
 		$(function() {
 			$("a[href='#gameInfo']").click(function() {
                 getGameInfo();
@@ -324,8 +432,60 @@
             $("a[href='#clue']").click(function() {
                 getClues();
             });
-            $("#clueRefresh").click(function(){
-                getClues();
+            
+            $("#beginVoteButton").click(function(){
+            	$.ajax({
+                    url:'index/getGame',
+                    type:'POST',
+                    cache : false,
+                    dataType : 'json',
+                    error:function(){
+                        alert("getGame network wrong!");
+                    },
+                    success:function(result){
+                        $("#gameIdSpan").html(result.gameId);
+                        if(result.gameStatus == 5) {
+                        	$("#voteRoundInput").val(result.voteRound);
+                            getUsers();
+                            $("#voteModal").modal("show");
+                        }
+                        else{
+                        	alert("现在不是投票阶段，不能进行投票！");
+                        }
+                    }
+                });
+            });
+            
+            $("#getVotesButton").click(function(){
+            	$.ajax({
+                    url:'index/getGame',
+                    type:'POST',
+                    cache : false,
+                    dataType : 'json',
+                    error:function(){
+                        alert("getGame network wrong!");
+                    },
+                    success:function(result){
+                        if(result.gameStatus == 6) {
+                        	$("#voteResultDiv").empty();
+                            for(var i=1; i<=result.voteRound; i++){
+                                var voteListDivId = 'voteListDiv'+i;
+                                var roundNum = i+1;
+                                $("#voteResultDiv").append('<div class="page-header">'+
+                                        '<h1><small>第'+i+'轮投票结果</small></h1></div>'+
+                                        '<ul id="'+voteListDivId+'" class="list-group"></ul>');
+                            }
+                            getVotes();
+                        }
+                        else{
+                            alert("投票结果尚未揭晓！");
+                        }
+                    }
+                });
+            })
+            
+            $("#confirmButton").click(function(){
+            	doVote();
             })
 			
 			$("#closeButton").click(function(){

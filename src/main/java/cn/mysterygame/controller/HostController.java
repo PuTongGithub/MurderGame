@@ -56,15 +56,13 @@ public class HostController {
 	}
 	
 	@PostMapping("/voteStart")
-	public Map<String, Object> voteStart(@CookieValue("gameId") int gameId, int voteRound){
+	public Map<String, Object> voteStart(@CookieValue("gameId") int gameId){
 		Map<String, Object> map = new HashMap<String, Object>();
 		//更新game状态
 		Game game = hostService.getGame(gameId);
-		game.setVoteRound(voteRound);
+		game.setVoteRound(game.getVoteRound()+1);
 		game.setGameStatus(5);
 		hostService.updateGame(game);
-		//初始化vote状态
-		hostService.initVote(gameId, voteRound);
 		
 		map.put("success", true);
 		map.put("message", "投票开始！");

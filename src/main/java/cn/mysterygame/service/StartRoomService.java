@@ -8,16 +8,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.mysterygame.dao.ClueMapper;
-import cn.mysterygame.dao.GameClueMapper;
 import cn.mysterygame.dao.GameMapper;
 import cn.mysterygame.dao.GameRoleMapper;
 import cn.mysterygame.dao.PlayMapper;
 import cn.mysterygame.dao.ScriptMapper;
 import cn.mysterygame.dao.UserMapper;
-import cn.mysterygame.entity.Clue;
 import cn.mysterygame.entity.Game;
-import cn.mysterygame.entity.GameClue;
 import cn.mysterygame.entity.GameRole;
 import cn.mysterygame.entity.Play;
 import cn.mysterygame.entity.Script;
@@ -33,13 +29,9 @@ public class StartRoomService {
 	@Autowired
 	private ScriptMapper scriptDao;
 	@Autowired
-	private ClueMapper clueDao;
-	@Autowired
 	private GameMapper gameDao;
 	@Autowired
 	private GameRoleMapper gameRoleDao;
-	@Autowired
-	private GameClueMapper gameClueDao;
 	
 	public List<Play> getPlays(){
 		return playDao.selectAll();
@@ -72,15 +64,16 @@ public class StartRoomService {
 			gameRoleDao.insertSelective(role);
 		}
 		
-		//GameClue初始化
-		List<Clue> clues = clueDao.selectByPlayId(playId);
+		//GameClue初始化,在想到更好的搜证方法之前，先采用手工分发
+		/*List<Clue> clues = clueDao.selectByPlayId(playId);
 		for (Clue clue : clues) {
 			GameClue gameClue = new GameClue();
 			gameClue.setGameId(gameId);
 			gameClue.setClueId(clue.getClueId());
 			gameClue.setPositionId(clue.getPositionId());
 			gameClueDao.insertSelective(gameClue);
-		}
+		}*/
+		
 		return gameId;
 	}
 	

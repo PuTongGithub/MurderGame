@@ -63,6 +63,12 @@
     from clues
     where play_id = #{playId}
   </select>
+  <select id="selectByPositionId" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from clues
+    where position_id = #{positionId}
+  </select>
   <select id="selectByClueId" resultMap="BaseResultMap" parameterType="int">
     select
     <include refid="Base_Column_List" />

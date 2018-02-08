@@ -9,5 +9,7 @@ public interface ClueMapper {
 	
 	public List<Clue> selectByPlayId(int playId);
 	
+	public List<Clue> selectByPositionId(int positionId);
+	
 	public Clue selectByClueId(int clueId);
 }

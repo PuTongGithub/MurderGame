@@ -5,12 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.mysterygame.dao.ClueMapper;
+import cn.mysterygame.dao.GameClueMapper;
 import cn.mysterygame.dao.GameMapper;
 import cn.mysterygame.dao.GameRoleMapper;
 import cn.mysterygame.dao.PlayMapper;
 import cn.mysterygame.dao.ScriptMapper;
 import cn.mysterygame.dao.UserMapper;
+import cn.mysterygame.entity.Clue;
 import cn.mysterygame.entity.Game;
+import cn.mysterygame.entity.GameClue;
 import cn.mysterygame.entity.GameRole;
 import cn.mysterygame.entity.Play;
 import cn.mysterygame.entity.Script;
@@ -28,6 +32,10 @@ public class RoleService {
 	GameRoleMapper gameRoleDao;
 	@Autowired
 	UserMapper userDao;
+	@Autowired
+	ClueMapper clueDao;
+	@Autowired
+	GameClueMapper gameClueDao;
 	
 	public Play getPlay(int gameId) {
 		Game game = gameDao.selectByGameId(gameId);
@@ -50,6 +58,22 @@ public class RoleService {
 			role.setUserId(userId);
 			gameRoleDao.updateByPrimaryKeySelective(role);
 			//to do:人满验证
+			
+			//已知线索分发
+			Script script = scriptDao.selectById(scriptId);
+			String[] positionsStrings=script.getKnownCluePosition().split("/");
+			for (String positionString : positionsStrings) {
+				int positionId = Integer.valueOf(positionString);
+				List<Clue> clues = clueDao.selectByPositionId(positionId);
+				for (Clue clue : clues) {
+					GameClue gameClue = new GameClue();
+					gameClue.setClueId(clue.getClueId());
+					gameClue.setGameId(gameId);
+					gameClue.setPositionId(positionId);
+					gameClue.setUserId(userId);
+					gameClueDao.insertSelective(gameClue);
+				}
+			}
 			return true;
 		}
 		else {

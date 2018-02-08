@@ -23,6 +23,9 @@
       <if test="voteRound != null" >
         vote_round,
       </if>
+      <if test="voteUserId != null" >
+        vote_user_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="gameId != null" >
@@ -34,6 +37,24 @@
       <if test="voteRound != null" >
         #{voteRound},
       </if>
+      <if test="voteUserId != null" >
+        #{voteUserId},
+      </if>
     </trim>
   </insert>
+  <select id="selectByGameId" resultMap="BaseResultMap" parameterType="int">
+    select
+    <include refid="Base_Column_List" />
+    from game_vote
+    where game_id = #{gameId}
+    order by vote_user_id
+  </select>
+  <select id="findUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from game_vote
+    where game_id = #{arg0}
+    and user_id = #{arg1}
+    and vote_round = #{arg2}
+  </select>
 </mapper>
